@@ -67,6 +67,13 @@ class TestSession:
         session.close()
         self.patched_library_interpreter.close.assert_called_once_with()
 
+    def test_init_with_options_from_existing_handle_and_close(self):
+        session = nifake.Session('FakeDevice', initialized_instrument_handle=SESSION_NUM_FOR_TEST)
+        self.patched_library_interpreter.init_with_options.assert_not_called()
+        assert session._interpreter._vi == SESSION_NUM_FOR_TEST
+        session.close()
+        self.patched_library_interpreter.close.assert_called_once_with()
+
     def test_close(self):
         session = nifake.Session('dev1')
         assert session._interpreter._vi == SESSION_NUM_FOR_TEST

@@ -7548,7 +7548,7 @@ class _SessionBase(object):
 class Session(_SessionBase):
     '''An NI-DCPower session to an NI programmable power supply or source measure unit.'''
 
-    def __init__(self, resource_name, channels=None, reset=False, options={}, independent_channels=True, *, grpc_options=None):
+    def __init__(self, resource_name, channels=None, reset=False, options={}, independent_channels=True, *, grpc_options=None, initialized_instrument_handle=None):
         r'''An NI-DCPower session to an NI programmable power supply or source measure unit.
 
         Creates and returns a new NI-DCPower session to the instrument(s) and channel(s) specified
@@ -7654,6 +7654,8 @@ class Session(_SessionBase):
 
             grpc_options (nidcpower.grpc_session_options.GrpcSessionOptions): MeasurementLink gRPC session options
 
+            initialized_instrument_handle (int): Specifies the preexisting instrument handle used to create a new instrument session
+
 
         Returns:
             session (nidcpower.Session): A session object representing the device.
@@ -7680,8 +7682,11 @@ class Session(_SessionBase):
         # Note that _interpreter default-initializes the session handle in its constructor, so that
         # if _fancy_initialize fails, the error handler can reference it.
         # And then here, once _fancy_initialize succeeds, we call set_session_handle
-        # with the actual session handle.
-        self._interpreter.set_session_handle(self._fancy_initialize(resource_name, channels, reset, options, independent_channels))
+        # with the actual session handle if there is no initialized_instrument_handle passed.
+        if initialized_instrument_handle is None:
+            self._interpreter.set_session_handle(self._fancy_initialize(resource_name, channels, reset, options, independent_channels))
+        else:
+            self._interpreter.set_session_handle(initialized_instrument_handle)
 
         # Store the parameter list for later printing in __repr__
         param_list = []

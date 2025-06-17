@@ -3024,7 +3024,7 @@ class _SessionBase(object):
 class Session(_SessionBase):
     '''An NI-FGEN session to an NI signal generator.'''
 
-    def __init__(self, resource_name, channel_name=None, reset_device=False, options={}, *, grpc_options=None):
+    def __init__(self, resource_name, channel_name=None, reset_device=False, options={}, *, grpc_options=None, initialized_instrument_handle=None):
         r'''An NI-FGEN session to an NI signal generator.
 
         Creates and returns a new NI-FGEN session to the specified channel of a
@@ -3128,6 +3128,8 @@ class Session(_SessionBase):
 
             grpc_options (nifgen.grpc_session_options.GrpcSessionOptions): MeasurementLink gRPC session options
 
+            initialized_instrument_handle (int): Specifies the preexisting instrument handle used to create a new instrument session
+
 
         Returns:
             session (nifgen.Session): A session object representing the device.
@@ -3153,8 +3155,11 @@ class Session(_SessionBase):
         # Note that _interpreter default-initializes the session handle in its constructor, so that
         # if _initialize_with_channels fails, the error handler can reference it.
         # And then here, once _initialize_with_channels succeeds, we call set_session_handle
-        # with the actual session handle.
-        self._interpreter.set_session_handle(self._initialize_with_channels(resource_name, channel_name, reset_device, options))
+        # with the actual session handle if there is no initialized_instrument_handle passed.
+        if initialized_instrument_handle is None:
+            self._interpreter.set_session_handle(self._initialize_with_channels(resource_name, channel_name, reset_device, options))
+        else:
+            self._interpreter.set_session_handle(initialized_instrument_handle)
 
         # NI-TClk does not work over NI gRPC Device Server
         if not grpc_options:

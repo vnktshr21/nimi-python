@@ -637,7 +637,7 @@ class _SessionBase(object):
 class Session(_SessionBase):
     '''An NI-FAKE session to a fake MI driver whose sole purpose is to test nimi-python code generation'''
 
-    def __init__(self, resource_name, options={}, id_query=False, reset_device=False, *, grpc_options=None):
+    def __init__(self, resource_name, options={}, id_query=False, reset_device=False, *, grpc_options=None, initialized_instrument_handle=None):
         r'''An NI-FAKE session to a fake MI driver whose sole purpose is to test nimi-python code generation
 
         Creates a new IVI instrument driver session.
@@ -693,6 +693,8 @@ class Session(_SessionBase):
 
             grpc_options (nifake.grpc_session_options.GrpcSessionOptions): MeasurementLink gRPC session options
 
+            initialized_instrument_handle (int): Specifies the preexisting instrument handle used to create a new instrument session
+
 
         Returns:
             session (nifake.Session): A session object representing the device.
@@ -717,8 +719,11 @@ class Session(_SessionBase):
         # Note that _interpreter default-initializes the session handle in its constructor, so that
         # if _init_with_options fails, the error handler can reference it.
         # And then here, once _init_with_options succeeds, we call set_session_handle
-        # with the actual session handle.
-        self._interpreter.set_session_handle(self._init_with_options(resource_name, options, id_query, reset_device))
+        # with the actual session handle if there is no initialized_instrument_handle passed.
+        if initialized_instrument_handle is None:
+            self._interpreter.set_session_handle(self._init_with_options(resource_name, options, id_query, reset_device))
+        else:
+            self._interpreter.set_session_handle(initialized_instrument_handle)
 
         # NI-TClk does not work over NI gRPC Device Server
         if not grpc_options:

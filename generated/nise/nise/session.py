@@ -50,7 +50,7 @@ class _SessionBase(object):
 class Session(_SessionBase):
     '''An NI Switch Executive session'''
 
-    def __init__(self, virtual_device_name, options={}):
+    def __init__(self, virtual_device_name, options={}, initialized_instrument_handle=None):
         r'''An NI Switch Executive session
 
         Opens a session to a specified NI Switch Executive virtual device. Opens
@@ -99,6 +99,8 @@ class Session(_SessionBase):
                 | driver_setup            | {}      |
                 +-------------------------+---------+
 
+            initialized_instrument_handle (int): Specifies the preexisting instrument handle used to create a new instrument session
+
 
         Returns:
             session (nise.Session): A session object representing the device.
@@ -119,8 +121,11 @@ class Session(_SessionBase):
         # Note that _interpreter default-initializes the session handle in its constructor, so that
         # if _open_session fails, the error handler can reference it.
         # And then here, once _open_session succeeds, we call set_session_handle
-        # with the actual session handle.
-        self._interpreter.set_session_handle(self._open_session(virtual_device_name, options))
+        # with the actual session handle if there is no initialized_instrument_handle passed.
+        if initialized_instrument_handle is None:
+            self._interpreter.set_session_handle(self._open_session(virtual_device_name, options))
+        else:
+            self._interpreter.set_session_handle(initialized_instrument_handle)
 
         # Store the parameter list for later printing in __repr__
         param_list = []

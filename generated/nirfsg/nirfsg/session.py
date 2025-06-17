@@ -6171,7 +6171,7 @@ class _SessionBase(object):
 class Session(_SessionBase):
     '''An NI-RFSG session to the NI-RFSG driver'''
 
-    def __init__(self, resource_name, options={}, id_query=False, reset_device=False):
+    def __init__(self, resource_name, options={}, id_query=False, reset_device=False, initialized_instrument_handle=None):
         r'''An NI-RFSG session to the NI-RFSG driver
 
         Opens a session to the device you specify as the RESOURCE_NAME and returns a ViSession handle that you use to identify the NI-RFSG device in all subsequent NI-RFSG method calls.
@@ -6250,6 +6250,8 @@ class Session(_SessionBase):
                 | False (0) | Do not reset device. |
                 +-----------+----------------------+
 
+            initialized_instrument_handle (int): Specifies the preexisting instrument handle used to create a new instrument session
+
 
         Returns:
             new_vi (int): Returns a ViSession handle that you use to identify the NI-RFSG device in all subsequent NI-RFSG method calls.
@@ -6269,8 +6271,11 @@ class Session(_SessionBase):
         # Note that _interpreter default-initializes the session handle in its constructor, so that
         # if _init_with_options fails, the error handler can reference it.
         # And then here, once _init_with_options succeeds, we call set_session_handle
-        # with the actual session handle.
-        self._interpreter.set_session_handle(self._init_with_options(resource_name, options, id_query, reset_device))
+        # with the actual session handle if there is no initialized_instrument_handle passed.
+        if initialized_instrument_handle is None:
+            self._interpreter.set_session_handle(self._init_with_options(resource_name, options, id_query, reset_device))
+        else:
+            self._interpreter.set_session_handle(initialized_instrument_handle)
 
         self.tclk = nitclk.SessionReference(self._interpreter.get_session_handle())
 

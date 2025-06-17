@@ -222,7 +222,7 @@ class Session(_SessionBase):
     '''${config['session_class_description']}'''
 
 <% grpc_options_param = ', *, grpc_options=None' if grpc_supported else '' %>\
-    def __init__(${init_method_params}${grpc_options_param}):
+    def __init__(${init_method_params}${grpc_options_param}, initialized_instrument_handle=None):
         r'''${config['session_class_description']}
 
 <%
@@ -241,6 +241,22 @@ if grpc_supported:
             'python_name': 'grpc_options',
             'size': {'mechanism': 'fixed', 'value': 1},
             'type_in_documentation': module_name + '.grpc_session_options.GrpcSessionOptions',
+            'type_in_documentation_was_calculated': False,
+            'use_in_python_api': False,
+        },
+    )
+
+ctor_for_docs['parameters'].append(
+        {
+            'default_value': None,
+            'direction': 'in',
+            'documentation': { 'description': 'Specifies the preexisting instrument handle used to create a new instrument session' },
+            'enum': None,
+            'is_repeated_capability': False,
+            'is_session_handle': False,
+            'python_name': 'initialized_instrument_handle',
+            'size': {'mechanism': 'fixed', 'value': 1},
+            'type_in_documentation': 'int',
             'type_in_documentation_was_calculated': False,
             'use_in_python_api': False,
         },
@@ -275,8 +291,11 @@ if grpc_supported:
         # Note that _interpreter default-initializes the session handle in its constructor, so that
         # if ${init_function['python_name']} fails, the error handler can reference it.
         # And then here, once ${init_function['python_name']} succeeds, we call set_session_handle
-        # with the actual session handle.
-        self._interpreter.set_session_handle(self.${init_function['python_name']}(${init_call_params}))
+        # with the actual session handle if there is no initialized_instrument_handle passed.
+        if initialized_instrument_handle is None:
+            self._interpreter.set_session_handle(self.${init_function['python_name']}(${init_call_params}))
+        else:
+            self._interpreter.set_session_handle(initialized_instrument_handle)
 
 % if config['uses_nitclk']:
 %   if grpc_supported:
