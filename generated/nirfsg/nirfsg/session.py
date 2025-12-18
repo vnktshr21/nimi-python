@@ -727,12 +727,12 @@ class _SessionBase(object):
     Note:
     One or more of the referenced values are not in the Python API for this driver. Enums that only define values, or represent True/False, have been removed.
     '''
-    available_paths = _attributes.AttributeViString(1150312)
+    available_paths = _attributes.AttributeViStringCommaSeparated(1150312)
     '''Type: str
 
     Returns a comma separated list of the configurable paths available for use based on your instrument configuration.
     '''
-    available_ports = _attributes.AttributeViString(1150249)
+    available_ports = _attributes.AttributeViStringCommaSeparated(1150249)
     '''Type: str
 
     Returns a comma-separated list of the ports available for use based on your instrument configuration.
@@ -1882,7 +1882,7 @@ class _SessionBase(object):
     | "DIO/PFI7"     | The trigger is received on PFI7 from the front panel DIO terminal.                                                                     |
     +----------------+----------------------------------------------------------------------------------------------------------------------------------------+
     '''
-    external_calibration_recommended_interval = _attributes.AttributeViInt32(1150076)
+    external_calibration_recommended_interval = _attributes.AttributeViInt32TimeDeltaMonths(1150076)
     '''Type: int
 
     Returns the recommended interval between each external calibration of the device.
@@ -1938,7 +1938,7 @@ class _SessionBase(object):
     | False | The RF signal generator has the 1 ms tuning option.        |
     +-------+------------------------------------------------------------+
     '''
-    fixed_group_delay_across_ports = _attributes.AttributeViString(1150271)
+    fixed_group_delay_across_ports = _attributes.AttributeViStringCommaSeparated(1150271)
     '''Type: str
 
     Specifies a comma-separated list of ports for which to fix the group delay.
@@ -2103,7 +2103,7 @@ class _SessionBase(object):
     | GenerationMode.SCRIPT       | 1002 (0x3ea) | Configures the RF signal generator to generate arbitrary waveforms as directed by the selected_script property..       |
     +-----------------------------+--------------+------------------------------------------------------------------------------------------------------------------------+
     '''
-    group_capabilities = _attributes.AttributeViString(1050401)
+    group_capabilities = _attributes.AttributeViStringCommaSeparated(1050401)
     '''Type: str
 
     Returns a string that contains a comma-separated list of class-extension groups that NI-RFSG implements.
@@ -4098,7 +4098,7 @@ class _SessionBase(object):
 
     `Streaming Waveform Data <https://www.ni.com/docs/en-US/bundle/rfsg/page/rfsg/streaming_waveform_data.html>`_
     '''
-    supported_instrument_models = _attributes.AttributeViString(1050327)
+    supported_instrument_models = _attributes.AttributeViStringCommaSeparated(1050327)
     '''Type: str
 
     Returns a string that contains a model code of the NI-RFSG device. For drivers that support more than one device, this property contains a comma-separated list of supported devices.
