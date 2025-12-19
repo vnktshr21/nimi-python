@@ -40,7 +40,8 @@ attributes = {
         },
         'lv_property': 'Inherent IVI Attributes:Driver Capabilities:Supported Instrument Models',
         'name': 'SUPPORTED_INSTRUMENT_MODELS',
-        'type': 'ViString'
+        'type': 'ViString',
+        'type_in_documentation': 'list of str'
     },
     1050401: {
         'access': 'read only',
@@ -51,7 +52,8 @@ attributes = {
         },
         'lv_property': 'Inherent IVI Attributes:Driver Capabilities:Class Group Capabilities',
         'name': 'GROUP_CAPABILITIES',
-        'type': 'ViString'
+        'type': 'ViString',
+        'type_in_documentation': 'list of str'
     },
     1050510: {
         'access': 'read only',
@@ -1866,11 +1868,12 @@ attributes = {
         'attribute_class': 'AttributeViInt32TimeDeltaMonths',
         'codegen_method': 'public',
         'documentation': {
-            'description': 'Returns the recommended interval between each external calibration of the device.\n\n**Units**: months\n\n**Supported Devices:** PXI-5610, PXIe-5611, PXIe-5644/5645/5646, PXI/PXIe-5650/5651/5652, PXIe-5653/5654/5654 with PXIe-5696, PXI-5670/5671, PXIe-5672/5673/5673E, PXIe-5820/5830/5831/5832/5840/5841/5842/5860'
+            'description': 'Returns the recommended interval between each external calibration of the device.\n\n**Supported Devices:** PXI-5610, PXIe-5611, PXIe-5644/5645/5646, PXI/PXIe-5650/5651/5652, PXIe-5653/5654/5654 with PXIe-5696, PXI-5670/5671, PXIe-5672/5673/5673E, PXIe-5820/5830/5831/5832/5840/5841/5842/5860'
         },
         'lv_property': 'External Calibration:Recommended Interval',
         'name': 'EXTERNAL_CALIBRATION_RECOMMENDED_INTERVAL',
-        'type': 'ViInt32'
+        'type': 'ViInt32',
+        'type_in_documentation': 'hightime.timedelta'
     },
     1150077: {
         'access': 'read only',
@@ -3336,7 +3339,8 @@ attributes = {
         },
         'lv_property': 'Device Specific:Vector Signal Transceiver:Signal Path:Available Ports',
         'name': 'AVAILABLE_PORTS',
-        'type': 'ViString'
+        'type': 'ViString',
+        'type_in_documentation': 'list of str'
     },
     1150251: {
         'access': 'read only',
@@ -3478,7 +3482,8 @@ attributes = {
         },
         'lv_property': 'Device Specific:Vector Signal Transceiver:Signal Path:Fixed Group Delay Across Ports',
         'name': 'FIXED_GROUP_DELAY_ACROSS_PORTS',
-        'type': 'ViString'
+        'type': 'ViString',
+        'type_in_documentation': 'list of str'
     },
     1150273: {
         'access': 'read-write',
@@ -3856,7 +3861,8 @@ attributes = {
         },
         'lv_property': 'Signal Path:Advanced:Available Paths',
         'name': 'AVAILABLE_PATHS',
-        'type': 'ViString'
+        'type': 'ViString',
+        'type_in_documentation': 'list of str'
     },
     1154097: {
         'access': 'read-write',
