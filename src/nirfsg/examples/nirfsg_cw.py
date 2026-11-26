@@ -1,19 +1,51 @@
+'''Generates a continuous wave (CW) tone.
+
+Python counterpart of the NI-RFSG .NET "GettingStarted/SingleToneGeneration" example.
+
+Background:
+    A CW signal is an unmodulated carrier: a single sine wave at the configured frequency and
+    power level. It is the simplest signal an RF signal generator produces, and is used, for
+    example, to measure the gain or the frequency response of a device under test, or as an
+    LO for a mixer.
+
+    Every NI-RFSG program follows the same basic flow:
+      1. Open a session to the device (nirfsg.Session).
+      2. Configure the device. configure_rf() sets the frequency and the power level.
+      3. Start the generation with initiate().
+      4. Call check_generation_status() periodically. It reports any error that occurred
+         during the generation.
+      5. Close the session. Using the session as a context manager ("with") closes it
+         automatically.
+    Until initiate() is called, the session is in the Configuration state: settings are stored
+    but not applied to the hardware. initiate() applies them and moves the device to the
+    Generation state. Leaving the "with session.initiate():" block calls abort(), which stops
+    the generation.
+
+Steps:
+    1. Open a session, configure the frequency and power level, and select CW mode.
+    2. Start the generation and check its status.
+'''
+
 import argparse
 import nirfsg
 import sys
 
 
 def example(resource_name, options, frequency, power_level):
+    # id_query=False skips checking the instrument identity, and reset_device=False opens the
+    # session without resetting the device.
     with nirfsg.Session(resource_name=resource_name, id_query=False, reset_device=False, options=options) as session:
         # Configure RF settings
         session.configure_rf(
             frequency,  # Frequency in Hz
             power_level  # Power level in dBm
         )
+        # CW mode generates an unmodulated tone; no waveform needs to be written.
         session.generation_mode = nirfsg.GenerationMode.CW
 
-        # Start generation
+        # Start generation. Leaving the "with" block aborts the generation.
         with session.initiate():
+            # Raises an nirfsg.Error if an error occurred during the generation.
             session.check_generation_status()
 
 
